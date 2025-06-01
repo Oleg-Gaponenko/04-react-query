@@ -10,3 +10,10 @@
   background-color: #e8f4fd;
   border-color: #b6d4fe;
 }
+
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 40px auto;
+}

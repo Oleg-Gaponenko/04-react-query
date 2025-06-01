@@ -1,8 +1,57 @@
-// import css from './App.module.css';
-// import SearchBar from '../SearchBar/SearchBar';
+import css from './App.module.css';
+import SearchBar from '../SearchBar/SearchBar';
+import MovieGrid from '../MovieGrid/MovieGrid';
+import Loader from '../Loader/Loader';
+import ErrorMessage from '../ErrorMessage/ErrorMessage';
+import toast from 'react-hot-toast';
+import type { Movie } from '../../types/movie';
+import { fetchMovies } from '../../services/movieService';
+import { useEffect, useState } from 'react';
 
 export default function App() {
-    return (
-        // <SearchBar/>
-    )
-};
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [isLoading, setIsloading] = useState(false);
+  const [error, setError] = useState(false);
+
+  const handleSearch = async (query: string) => {
+    setIsloading(true);
+    setError(false);
+    setMovies([]);
+
+    try {
+      const results = await fetchMovies(query);
+
+      if (results.length === 0) {
+        toast.error('No movies found for your request.');
+      }
+
+      setMovies(results);
+    } catch (error) {
+      setError(true);
+      toast.error('There was an error, please try again...');
+    } finally {
+      setIsloading(false);
+    }
+  };
+
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+
+  const handleSelectMovie = (movie: Movie) => {
+    setSelectedMovie(movie);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedMovie(null);
+  };
+
+  return (
+    <>
+      <SearchBar onSubmit={handleSearch} />
+      {isLoading && <Loader />}
+      {error && <ErrorMessage />}
+      {!isLoading && !error && (
+        <MovieGrid movies={movies} onSelect={handleSelectMovie} />
+      )}
+    </>
+  );
+}
