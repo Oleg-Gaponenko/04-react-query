@@ -8,11 +8,12 @@ import type { Movie } from '../../types/movie';
 import { fetchMovies } from '../../services/movieService';
 import { useState } from 'react';
 import MovieModal from '../MovieModal/MovieModal';
+import { Toaster } from 'react-hot-toast';
 
 export default function App() {
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [isLoading, setIsloading] = useState(false);
-  const [error, setError] = useState(false);
+  const [isLoading, setIsloading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
   const handleSearch = async (query: string) => {
@@ -46,6 +47,7 @@ export default function App() {
 
   return (
     <div className={css.app}>
+      <Toaster />
       <SearchBar onSubmit={handleSearch} />
       {isLoading && <Loader />}
       {error && <ErrorMessage />}
