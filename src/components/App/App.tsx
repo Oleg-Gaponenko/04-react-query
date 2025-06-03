@@ -12,12 +12,12 @@ import { Toaster } from 'react-hot-toast';
 
 export default function App() {
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [isLoading, setIsloading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
   const handleSearch = async (query: string) => {
-    setIsloading(true);
+    setIsLoading(true);
     setError(false);
     setMovies([]);
 
@@ -33,7 +33,7 @@ export default function App() {
       setError(true);
       toast.error('There was an error, please try again...');
     } finally {
-      setIsloading(false);
+      setIsLoading(false);
     }
   };
 
