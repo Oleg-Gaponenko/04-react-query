@@ -9,7 +9,7 @@ import { fetchMovies } from '../../services/movieService';
 import { useEffect, useState } from 'react';
 import MovieModal from '../MovieModal/MovieModal';
 import { Toaster } from 'react-hot-toast';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import ReactPaginate from 'react-paginate';
 
 export default function App() {
@@ -21,6 +21,7 @@ export default function App() {
     queryKey: ['movies', query, page],
     queryFn: () => fetchMovies(query, page),
     enabled: query.trim() !== '',
+    placeholderData: keepPreviousData,
   });
 
   useEffect(() => {
