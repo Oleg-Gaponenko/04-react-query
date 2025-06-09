@@ -6,7 +6,7 @@ import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import toast from 'react-hot-toast';
 import type { Movie } from '../../types/movie';
 import { fetchMovies } from '../../services/movieService';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import MovieModal from '../MovieModal/MovieModal';
 import { Toaster } from 'react-hot-toast';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
@@ -16,6 +16,7 @@ export default function App() {
   const [query, setQuery] = useState<string>('');
   const [page, setPage] = useState<number>(1);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+  const previouslySearched = useRef<boolean>(false);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['movies', query, page],
@@ -25,7 +26,13 @@ export default function App() {
   });
 
   useEffect(() => {
-    if (data && data.results.length === 0) {
+    if (query.trim() !== '') {
+      previouslySearched.current = true;
+    }
+  }, [query]);
+
+  useEffect(() => {
+    if (previouslySearched.current && data && data.results.length === 0) {
       toast.error('No movies found for your request.');
     }
   }, [data]);
